@@ -35,3 +35,4 @@ class BookingInDB(BookingBase):
 
     class Config:
         orm_mode = True
+        use_enum_values = True  # 使用枚举的原始值（字符串）

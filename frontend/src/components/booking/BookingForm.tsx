@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Form, Input, DatePicker, TimePicker, Select, Button, Space } from 'antd';
-import type { BookingCreate } from '../../types/booking';
+import type { BookingCreate, Booking } from '../../types/booking';
+import moment from 'moment';
 
 interface BookingFormProps {
   visible: boolean;
@@ -10,10 +11,31 @@ interface BookingFormProps {
    * 或直接调用后端 API
    */
   onSubmit: (values: Partial<BookingCreate>) => void;
+  initialValues?: Booking;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }) => {
+const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
   const [form] = Form.useForm();
+
+  // 当initialValues变化时重置表单数据
+  useEffect(() => {
+    if (visible) {
+      if (initialValues) {
+        // 设置表单初始值
+        form.setFieldsValue({
+          venue_id: initialValues.venue_id,
+          booking_date: initialValues.booking_date ? moment(initialValues.booking_date) : null,
+          start_time: initialValues.start_time ? moment(initialValues.start_time, 'HH:mm:ss') : null,
+          end_time: initialValues.end_time ? moment(initialValues.end_time, 'HH:mm:ss') : null,
+          user_name: initialValues.user_name,
+          contact_info: initialValues.contact_info,
+          status: initialValues.status
+        });
+      } else {
+        form.resetFields();
+      }
+    }
+  }, [visible, initialValues, form]);
 
   const handleSubmit = async () => {
     try {
@@ -27,8 +49,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
         end_time: values.end_time?.format('HH:mm:ss'),
         user_name: values.user_name,
         contact_info: values.contact_info,
-        // 如果需要状态，可以取消注释下面代码
-        // status: values.status,
+        // status: values.status, // 移除status字段，因为它不在BookingCreate类型中
       };
 
       onSubmit(bookingData);
@@ -40,7 +61,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
 
   return (
     <Modal
-      title="添加预订"
+      title={initialValues ? "编辑预订" : "添加预订"}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -99,11 +120,10 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
           <Input />
         </Form.Item>
 
-        {/** 如果需要让用户手动选择状态，可以取消下面代码的注释 */}
         <Form.Item
           name="status"
           label="预订状态"
-          rules={[{ required: false }]}
+          rules={[{ required: true, message: '请选择预订状态' }]}
           initialValue="pending"
         >
           <Select>

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/moment": "^2.11.29",
+    "moment": "^2.30.1"
+  }
+}

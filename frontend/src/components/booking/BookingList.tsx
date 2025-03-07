@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, message, Popconfirm, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchBookings, deleteBooking } from '../../store/bookingSlice';
+import { fetchBookings, deleteBooking, updateBooking } from '../../store/bookingSlice';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import BookingForm from './BookingForm';
+import { Booking } from '../../types/booking';
 
 const BookingList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { bookings, status, error } = useAppSelector((state) => state.bookings);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -22,6 +26,27 @@ const BookingList: React.FC = () => {
       message.error(
         'Delete failed: ' + (err instanceof Error ? err.message : 'Unknown error')
       );
+    }
+  };
+
+  const handleEdit = (booking: Booking) => {
+    setEditingBooking(booking);
+    setIsModalVisible(true);
+  };
+
+  const handleSubmit = (values: Partial<Booking>) => {
+    if (editingBooking) {
+      dispatch(updateBooking({ id: editingBooking.id, booking: values }))
+        .unwrap()
+        .then(() => {
+          message.success('Booking updated successfully');
+          setIsModalVisible(false);
+          setEditingBooking(null);
+          dispatch(fetchBookings());
+        })
+        .catch((error) => {
+          message.error('Booking update failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
+        });
     }
   };
 
@@ -74,13 +99,13 @@ const BookingList: React.FC = () => {
     {
       title: 'Actions',
       key: 'action',
-      render: (_: any, record: any) => (
+      render: (_: any, record: Booking) => (
         <Space size="middle">
           <Button
             type="text"
             icon={<EditOutlined />}
             style={{ color: '#000000' }}
-            onClick={() => console.log('Edit', record.id)}
+            onClick={() => handleEdit(record)}
           >
             Edit
           </Button>
@@ -124,6 +149,15 @@ const BookingList: React.FC = () => {
           backgroundColor: '#ffffff',
           border: '1px solid #d9d9d9',
         }}
+      />
+      <BookingForm
+        visible={isModalVisible}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingBooking(null);
+        }}
+        onSubmit={handleSubmit}
+        initialValues={editingBooking || undefined}
       />
     </div>
   );

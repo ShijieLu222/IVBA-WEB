@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, message, Popconfirm, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchBookings, deleteBooking, updateBooking } from '../../store/bookingSlice';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import BookingForm from './BookingForm';
+import BookingView from './BookingView';
 import { Booking } from '../../types/booking';
 
 const BookingList: React.FC = () => {
@@ -11,6 +12,8 @@ const BookingList: React.FC = () => {
   const { bookings, status, error } = useAppSelector((state) => state.bookings);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
+  const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -32,6 +35,11 @@ const BookingList: React.FC = () => {
   const handleEdit = (booking: Booking) => {
     setEditingBooking(booking);
     setIsModalVisible(true);
+  };
+
+  const handleView = (booking: Booking) => {
+    setViewingBooking(booking);
+    setIsViewModalVisible(true);
   };
 
   const handleSubmit = (values: Partial<Booking>) => {
@@ -103,6 +111,14 @@ const BookingList: React.FC = () => {
         <Space size="middle">
           <Button
             type="text"
+            icon={<EyeOutlined />}
+            style={{ color: '#1890ff' }}
+            onClick={() => handleView(record)}
+          >
+            查看
+          </Button>
+          <Button
+            type="text"
             icon={<EditOutlined />}
             style={{ color: '#000000' }}
             onClick={() => handleEdit(record)}
@@ -158,6 +174,14 @@ const BookingList: React.FC = () => {
         }}
         onSubmit={handleSubmit}
         initialValues={editingBooking || undefined}
+      />
+      <BookingView
+        visible={isViewModalVisible}
+        booking={viewingBooking}
+        onClose={() => {
+          setIsViewModalVisible(false);
+          setViewingBooking(null);
+        }}
       />
     </div>
   );

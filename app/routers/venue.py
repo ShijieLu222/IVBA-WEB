@@ -22,9 +22,9 @@ def get_venues(
     
     # 如果提供了名称参数，进行模糊搜索
     if name:
-        query = query.filter(venue_model.Venue.venue_name.ilike(f"%{name}%"))
+        query = query.filter(venue_model.Venue.venue_name.ilike(f"%{name}%"))# pyright: ignore[reportOptionalCall]
     
-    venues = query.offset(skip).limit(limit).all()
+    venues = query.offset(skip).limit(limit).all()# pyright: ignore[reportOptionalCall]
     return venues
 
 @router.get("/{venue_id}", response_model=venue_schema.VenueInDB)
@@ -33,7 +33,7 @@ def get_venue(venue_id: int, db: Session = Depends(get_db)):
     # 断言 db 不会是 None
     assert db is not None, "db should never be None here"
     
-    venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()
+    venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()# pyright: ignore[reportOptionalCall]
     if venue is None:
         raise HTTPException(status_code=404, detail="场地不存在")
     return venue
@@ -56,7 +56,7 @@ def update_venue(venue_id: int, venue: venue_schema.VenueUpdate, db: Session = D
     # 断言 db 不会是 None
     assert db is not None, "db should never be None here"
     
-    db_venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()
+    db_venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()# pyright: ignore[reportOptionalCall]
     if db_venue is None:
         raise HTTPException(status_code=404, detail="场地不存在")
     
@@ -75,7 +75,7 @@ def delete_venue(venue_id: int, db: Session = Depends(get_db)):
     # 断言 db 不会是 None
     assert db is not None, "db should never be None here"
     
-    db_venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()
+    db_venue = db.query(venue_model.Venue).filter(venue_model.Venue.id == venue_id).first()# pyright: ignore[reportOptionalCall]
     if db_venue is None:
         raise HTTPException(status_code=404, detail="场地不存在")
     

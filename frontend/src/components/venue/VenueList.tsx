@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, message, Popconfirm } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchVenues, deleteVenue, createVenue, updateVenue } from '../../store/venueSlice';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import VenueForm from './VenueForm';
+import VenueView from './VenueView';
 import { Venue } from '../../types/venue';
 
 const VenueList: React.FC = () => {
@@ -11,6 +12,8 @@ const VenueList: React.FC = () => {
   const { venues, status } = useAppSelector((state) => state.venues);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingVenue, setEditingVenue] = useState<Venue | null>(null);
+  const [viewingVenue, setViewingVenue] = useState<Venue | null>(null);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
   useEffect(() => {
     dispatch(fetchVenues());
@@ -41,6 +44,11 @@ const VenueList: React.FC = () => {
   const handleEdit = (venue: Venue) => {
     setEditingVenue(venue);
     setIsModalVisible(true);
+  };
+
+  const handleView = (venue: Venue) => {
+    setViewingVenue(venue);
+    setIsViewModalVisible(true);
   };
 
   const handleSubmit = (values: Partial<Venue>) => {
@@ -88,6 +96,14 @@ const VenueList: React.FC = () => {
       key: 'action',
       render: (_: any, record: Venue) => (
         <Space size="middle">
+          <Button 
+            type="text" 
+            icon={<EyeOutlined />}
+            style={{ color: '#1890ff' }}
+            onClick={() => handleView(record)}
+          >
+            View
+          </Button>
           <Button 
             type="text" 
             icon={<EditOutlined />}
@@ -143,6 +159,14 @@ const VenueList: React.FC = () => {
         }}
         onSubmit={handleSubmit}
         initialValues={editingVenue || undefined}
+      />
+      <VenueView
+        visible={isViewModalVisible}
+        venue={viewingVenue}
+        onClose={() => {
+          setIsViewModalVisible(false);
+          setViewingVenue(null);
+        }}
       />
     </div>
   );

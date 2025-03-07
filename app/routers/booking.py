@@ -27,13 +27,13 @@ def get_bookings(
     query = db.query(booking_model.Booking)
     
     if venue_id:
-        query = query.filter(booking_model.Booking.venue_id == venue_id)
+        query = query.filter(booking_model.Booking.venue_id == venue_id) # pyright: ignore[reportOptionalCall]
     if booking_date:
-        query = query.filter(booking_model.Booking.booking_date == booking_date)
+        query = query.filter(booking_model.Booking.booking_date == booking_date)# pyright: ignore[reportOptionalCall]
     if status:
-        query = query.filter(booking_model.Booking.status == booking_model.BookingStatus(status))
+        query = query.filter(booking_model.Booking.status == booking_model.BookingStatus(status))# pyright: ignore[reportOptionalCall]
     
-    bookings = query.offset(skip).limit(limit).all()
+    bookings = query.offset(skip).limit(limit).all() # pyright: ignore[reportOptionalCall]
     return bookings
 
 
@@ -42,7 +42,7 @@ def get_booking(booking_id: int, db: Session = Depends(get_db)):
     """获取单个预订详情"""
     assert db is not None, "db should never be None here"
     
-    booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()
+    booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()# pyright: ignore[reportOptionalCall]
     if booking is None:
         raise HTTPException(status_code=404, detail="预订不存在")
     return booking
@@ -88,7 +88,7 @@ def update_booking(booking_id: int, booking: booking_schema.BookingUpdate, db: S
     """更新预订信息"""
     assert db is not None, "db should never be None here"
     
-    db_booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()
+    db_booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()# pyright: ignore[reportOptionalCall]
     if db_booking is None:
         raise HTTPException(status_code=404, detail="预订不存在")
     
@@ -131,7 +131,7 @@ def delete_booking(booking_id: int, db: Session = Depends(get_db)):
     """取消或删除预订"""
     assert db is not None, "db should never be None here"
     
-    db_booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()
+    db_booking = db.query(booking_model.Booking).filter(booking_model.Booking.id == booking_id).first()# pyright: ignore[reportOptionalCall]
     if db_booking is None:
         raise HTTPException(status_code=404, detail="预订不存在")
     
@@ -154,7 +154,7 @@ def check_booking_conflicts(db: Session, venue_id: int, booking_date: date,
             and_(booking_model.Booking.start_time < end_time, booking_model.Booking.end_time >= end_time),
             and_(booking_model.Booking.start_time >= start_time, booking_model.Booking.end_time <= end_time)
         )
-    )
+    )# pyright: ignore[reportOptionalCall]
     
     # 如果是更新现有预订，排除自身
     if booking_id is not None:

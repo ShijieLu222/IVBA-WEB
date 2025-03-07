@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routers import venue, booking
+from .routers import venue, booking, auth, user
 from .models.venue import Venue
-from .models.booking import Booking  # 导入所有模型
+from .models.booking import Booking
+from .models.user import User  # 导入所有模型
 
 # 创建数据库表
 Base.metadata.create_all(bind=engine)  # type: ignore
@@ -27,6 +28,8 @@ app.add_middleware(
 # 注册路由
 app.include_router(venue.router)
 app.include_router(booking.router)
+app.include_router(auth.router)
+app.include_router(user.router)
 
 @app.get("/")
 async def root():

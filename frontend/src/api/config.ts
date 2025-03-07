@@ -1,8 +1,11 @@
 import axios from 'axios';
 
+// API基础URL
+export const API_BASE_URL = '/api';
+
 // 创建axios实例
 const api = axios.create({
-  baseURL: '/api', // 使用相对路径，通过Vite代理转发到后端
+  baseURL: API_BASE_URL, // 使用相对路径，通过Vite代理转发到后端
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

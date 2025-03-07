@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.tsx'
 
 // 配置axios默认baseURL
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'http://localhost:8000'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,68 +1,59 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { getBookings, createBooking as apiCreateBooking, updateBooking as apiUpdateBooking, deleteBooking as apiDeleteBooking } from '../api/booking';
+import { Booking } from '../types/booking';
 
-// 定义预订类型
-export interface Booking {
-  id: number;
-  venue_id: number;
-  user_name: string;
-  contact: string;
-  booking_date: string;
-  start_time: string;
-  end_time: string;
-  status: 'confirmed' | 'pending' | 'cancelled';
-  created_at: string;
-  updated_at: string;
-}
-
-// 定义状态类型
+// Define state type
 interface BookingState {
   bookings: Booking[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
-// 初始状态
+// Initial state
 const initialState: BookingState = {
   bookings: [],
   status: 'idle',
   error: null,
 };
 
-// 异步thunk action - 获取预订列表
+// Async thunk action - Get booking list
 export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async () => {
-  const response = await axios.get('/api/bookings');
-  return response.data;
+  return await getBookings();
 });
 
-// 创建预订
-export const createBooking = createAsyncThunk('bookings/createBooking', 
+// Create booking
+export const createBooking = createAsyncThunk(
+  'bookings/createBooking',
   async (booking: Omit<Booking, 'id' | 'created_at' | 'updated_at'>) => {
-    const response = await axios.post('/api/bookings', booking);
-    return response.data;
-});
+    return await apiCreateBooking(booking);
+  }
+);
 
-// 更新预订
-export const updateBooking = createAsyncThunk('bookings/updateBooking', 
+// Update booking
+export const updateBooking = createAsyncThunk(
+  'bookings/updateBooking',
   async ({ id, booking }: { id: number; booking: Partial<Booking> }) => {
-    const response = await axios.put(`/api/bookings/${id}`, booking);
-    return response.data;
-});
+    return await apiUpdateBooking(id, booking);
+  }
+);
 
-// 删除预订
-export const deleteBooking = createAsyncThunk('bookings/deleteBooking', async (id: number) => {
-  await axios.delete(`/api/bookings/${id}`);
-  return id;
-});
+// Delete booking
+export const deleteBooking = createAsyncThunk(
+  'bookings/deleteBooking',
+  async (id: number) => {
+    await apiDeleteBooking(id);
+    return id;
+  }
+);
 
-// 创建slice
+// Create slice
 const bookingSlice = createSlice({
   name: 'bookings',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 获取预订列表
+      // Get booking list
       .addCase(fetchBookings.pending, (state) => {
         state.status = 'loading';
       })
@@ -72,20 +63,20 @@ const bookingSlice = createSlice({
       })
       .addCase(fetchBookings.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message || '获取预订列表失败';
+        state.error = action.error.message || 'Failed to fetch booking list';
       })
-      // 创建预订
+      // Create booking
       .addCase(createBooking.fulfilled, (state, action) => {
         state.bookings.push(action.payload);
       })
-      // 更新预订
+      // Update booking
       .addCase(updateBooking.fulfilled, (state, action) => {
         const index = state.bookings.findIndex((booking) => booking.id === action.payload.id);
         if (index !== -1) {
           state.bookings[index] = action.payload;
         }
       })
-      // 删除预订
+      // Delete booking
       .addCase(deleteBooking.fulfilled, (state, action) => {
         state.bookings = state.bookings.filter((booking) => booking.id !== action.payload);
       });

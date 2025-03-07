@@ -2,26 +2,26 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getVenues, createVenue as apiCreateVenue, updateVenue as apiUpdateVenue, deleteVenue as apiDeleteVenue } from '../api/venue';
 import { Venue } from '../types/venue';
 
-// 定义状态类型
+// Define state type
 interface VenueState {
   venues: Venue[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
-// 初始状态
+// Initial state
 const initialState: VenueState = {
   venues: [],
   status: 'idle',
   error: null,
 };
 
-// 异步thunk action - 获取场地列表
+// Async thunk action - Get venue list
 export const fetchVenues = createAsyncThunk('venues/fetchVenues', async () => {
   return await getVenues();
 });
 
-// 创建场地
+// Create venue
 export const createVenue = createAsyncThunk(
   'venues/createVenue', 
   async (venue: Omit<Venue, 'id' | 'createdAt' | 'lastModified'>) => {
@@ -29,7 +29,7 @@ export const createVenue = createAsyncThunk(
   }
 );
 
-// 更新场地
+// Update venue
 export const updateVenue = createAsyncThunk(
   'venues/updateVenue', 
   async ({ id, venue }: { id: string; venue: Partial<Venue> }) => {
@@ -37,7 +37,7 @@ export const updateVenue = createAsyncThunk(
   }
 );
 
-// 删除场地
+// Delete venue
 export const deleteVenue = createAsyncThunk(
   'venues/deleteVenue', 
   async (id: string) => {
@@ -46,14 +46,14 @@ export const deleteVenue = createAsyncThunk(
   }
 );
 
-// 创建slice
+// Create slice
 const venueSlice = createSlice({
   name: 'venues',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 获取场地列表
+      // Get venue list
       .addCase(fetchVenues.pending, (state) => {
         state.status = 'loading';
       })
@@ -63,20 +63,23 @@ const venueSlice = createSlice({
       })
       .addCase(fetchVenues.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message || '获取场地列表失败';
+        state.error = action.error.message || 'Failed to fetch venue list';
       })
-      // 创建场地
+      // Create venue
+      // Create venue
       .addCase(createVenue.fulfilled, (state, action) => {
         state.venues.push(action.payload);
       })
-      // 更新场地
+      // Update venue
+      // Update venue
       .addCase(updateVenue.fulfilled, (state, action) => {
         const index = state.venues.findIndex((venue) => venue.id === action.payload.id);
         if (index !== -1) {
           state.venues[index] = action.payload;
         }
       })
-      // 删除场地
+      // Delete venue
+      // Delete venue
       .addCase(deleteVenue.fulfilled, (state, action) => {
         state.venues = state.venues.filter((venue) => venue.id !== action.payload);
       });

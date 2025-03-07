@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Table, Button, Space, message, Popconfirm, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchBookings, deleteBooking, Booking } from '../../store/bookingSlice';
+import { fetchBookings, deleteBooking } from '../../store/bookingSlice';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 const BookingList: React.FC = () => {
@@ -17,19 +17,21 @@ const BookingList: React.FC = () => {
   const handleDelete = async (id: number) => {
     try {
       await dispatch(deleteBooking(id)).unwrap();
-      message.success('预订删除成功');
+      message.success('Booking deleted successfully');
     } catch (err) {
-      message.error('删除失败：' + (err instanceof Error ? err.message : '未知错误'));
+      message.error(
+        'Delete failed: ' + (err instanceof Error ? err.message : 'Unknown error')
+      );
     }
   };
 
   const getStatusTag = (status: string) => {
-    const statusConfig = {
-      confirmed: { color: '#000000', text: '已确认' },
-      pending: { color: '#666666', text: '待确认' },
-      cancelled: { color: '#999999', text: '已取消' },
+    const statusConfig: Record<string, { color: string; text: string }> = {
+      confirmed: { color: '#000000', text: 'Confirmed' },
+      pending: { color: '#666666', text: 'Pending' },
+      cancelled: { color: '#999999', text: 'Cancelled' },
     };
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = statusConfig[status] || { color: '#cccccc', text: status };
     return (
       <Tag color={config.color} style={{ borderColor: config.color }}>
         {config.text}
@@ -39,61 +41,57 @@ const BookingList: React.FC = () => {
 
   const columns = [
     {
-      title: '预订人',
+      title: 'Booker',
       dataIndex: 'user_name',
       key: 'user_name',
     },
     {
-      title: '联系方式',
-      dataIndex: 'contact',
-      key: 'contact',
+      title: 'Contact',
+      dataIndex: 'contact_info',
+      key: 'contact_info',
     },
     {
-      title: '预订日期',
+      title: 'Booking Date',
       dataIndex: 'booking_date',
       key: 'booking_date',
     },
     {
-      title: '开始时间',
+      title: 'Start Time',
       dataIndex: 'start_time',
       key: 'start_time',
     },
     {
-      title: '结束时间',
+      title: 'End Time',
       dataIndex: 'end_time',
       key: 'end_time',
     },
     {
-      title: '状态',
+      title: 'Status',
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => getStatusTag(status),
     },
     {
-      title: '操作',
+      title: 'Actions',
       key: 'action',
-      render: (_: any, record: Booking) => (
+      render: (_: any, record: any) => (
         <Space size="middle">
-          <Button 
-            type="text" 
+          <Button
+            type="text"
             icon={<EditOutlined />}
             style={{ color: '#000000' }}
-            onClick={() => console.log('编辑', record.id)}
+            onClick={() => console.log('Edit', record.id)}
           >
-            编辑
+            Edit
           </Button>
           <Popconfirm
-            title="确定要删除这个预订吗？"
+            title="Are you sure you want to delete this booking?"
             onConfirm={() => handleDelete(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText="Confirm"
+            cancelText="Cancel"
           >
-            <Button 
-              type="text" 
-              danger 
-              icon={<DeleteOutlined />}
-            >
-              删除
+            <Button type="text" danger icon={<DeleteOutlined />}>
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -104,18 +102,19 @@ const BookingList: React.FC = () => {
   return (
     <div>
       <div style={{ marginBottom: 16 }}>
-        <Button 
-          type="primary" 
+        <Button
+          type="primary"
           icon={<PlusOutlined />}
-          style={{ 
+          style={{
             backgroundColor: '#000000',
             borderColor: '#000000',
           }}
-          onClick={() => console.log('新增预订')}
+          onClick={() => console.log('Add Booking')}
         >
-          新增预订
+          Add Booking
         </Button>
       </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <Table
         columns={columns}
         dataSource={bookings}

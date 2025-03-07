@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Form, Input, InputNumber, Button, Space } from 'antd';
 import { Venue } from '../../types/venue';
 
@@ -6,10 +6,32 @@ interface VenueFormProps {
     visible: boolean;
     onCancel: () => void;
     onSubmit: (values: Partial<Venue>) => void;
+    initialValues?: Venue;
 }
 
-const VenueForm: React.FC<VenueFormProps> = ({ visible, onCancel, onSubmit }) => {
+const VenueForm: React.FC<VenueFormProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
     const [form] = Form.useForm();
+
+    // Reset form data when initialValues change
+    useEffect(() => {
+        if (visible) {
+            if (initialValues) {
+                form.setFieldsValue({
+                    venue_name: initialValues.venue_name,
+                    description: initialValues.description,
+                    address: initialValues.address,
+                    contact_name: initialValues.contact_name,
+                    contact_email: initialValues.contact_email,
+                    contact_phone: initialValues.contact_phone,
+                    size_sqm: initialValues.size_sqm,
+                    price: initialValues.price,
+                    maximum_capacity: initialValues.maximum_capacity
+                });
+            } else {
+                form.resetFields();
+            }
+        }
+    }, [visible, initialValues, form]);
 
     const handleSubmit = async () => {
         try {
@@ -29,7 +51,6 @@ const VenueForm: React.FC<VenueFormProps> = ({ visible, onCancel, onSubmit }) =>
                 availability: []
             };
             onSubmit(venueData);
-            form.resetFields();
         } catch (error) {
             console.error('Validation failed:', error);
         }
@@ -37,7 +58,7 @@ const VenueForm: React.FC<VenueFormProps> = ({ visible, onCancel, onSubmit }) =>
 
     return (
         <Modal
-            title="Add New Venue"
+            title={initialValues ? "Edit Venue" : "Add New Venue"}
             open={visible}
             onCancel={onCancel}
             footer={null}
@@ -137,7 +158,7 @@ const VenueForm: React.FC<VenueFormProps> = ({ visible, onCancel, onSubmit }) =>
                     <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
                         <Button onClick={onCancel}>Cancel</Button>
                         <Button type="primary" htmlType="submit" style={{ backgroundColor: '#000000' }}>
-                            Submit
+                            {initialValues ? 'Update' : 'Submit'}
                         </Button>
                     </Space>
                 </Form.Item>

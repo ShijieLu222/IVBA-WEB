@@ -19,7 +19,7 @@ def get_bookings(
     db: Session = Depends(get_db)
 ):
     """
-    获取预订列表，支持按场地ID、日期和状态筛选
+    获取预订列表 支持按场地ID、日期和状态筛选
     """
     # 断言 db 不会是 None，让 Pyright 知道 db 是一个有效的 Session
     assert db is not None, "db should never be None here"

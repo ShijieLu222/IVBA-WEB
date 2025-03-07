@@ -1,32 +1,32 @@
 import api from './config';
 import { Venue } from '../types/venue';
 
-// 获取所有场地
+// Get all venues
 export const getVenues = async () => {
-  const response = await api.get('/api/venues');
+  const response = await api.get('/venues');
   return response.data;
 };
 
-// 获取单个场地
+// Get single venue
 export const getVenue = async (id: string) => {
-  const response = await api.get(`/api/venues/${id}`);
+  const response = await api.get(`/venues/${id}`);
   return response.data;
 };
 
-// 创建场地
+// Create venue
 export const createVenue = async (venue: Omit<Venue, 'id' | 'createdAt' | 'lastModified'>) => {
-  const response = await api.post('/api/venues', venue);
+  const response = await api.post('/venues', venue);
   return response.data;
 };
 
-// 更新场地
+// Update venue
 export const updateVenue = async (id: string, venue: Partial<Venue>) => {
-  const response = await api.put(`/api/venues/${id}`, venue);
+  const response = await api.put(`/venues/${id}`, venue);
   return response.data;
 };
 
-// 删除场地
+// Delete venue
 export const deleteVenue = async (id: string) => {
-  await api.delete(`/api/venues/${id}`);
+  await api.delete(`/venues/${id}`);
   return id;
-}; 
+};

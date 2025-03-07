@@ -5,9 +5,9 @@ import type { BookingCreate } from '../../types/booking';
 interface BookingFormProps {
   visible: boolean;
   onCancel: () => void;
-  /** 
-   * 表单提交后回调，父组件可在此 dispatch(createBooking) 
-   * 或直接调用后端 API 
+  /**
+   * 表单提交后的回调，父组件可以在这里 dispatch(createBooking)
+   * 或直接调用后端 API
    */
   onSubmit: (values: Partial<BookingCreate>) => void;
 }
@@ -19,7 +19,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
     try {
       const values = await form.validateFields();
 
-      // 整理表单数据为后端或 Redux 需要的格式
+      // 整理表单数据为后端或 Redux 所需的格式
       const bookingData: Partial<BookingCreate> = {
         venue_id: Number(values.venue_id),
         booking_date: values.booking_date?.format('YYYY-MM-DD'),
@@ -27,7 +27,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
         end_time: values.end_time?.format('HH:mm:ss'),
         user_name: values.user_name,
         contact_info: values.contact_info,
-        // 如果需要状态:
+        // 如果需要状态，可以取消注释下面代码
         // status: values.status,
       };
 
@@ -64,10 +64,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
           label="预订日期"
           rules={[{ required: true, message: '请选择预订日期' }]}
         >
-          <DatePicker
-            style={{ width: '100%' }}
-            // 如果需要默认值，可用 defaultValue={dayjs()}
-          />
+          <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
@@ -75,10 +72,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
           label="开始时间"
           rules={[{ required: true, message: '请选择开始时间' }]}
         >
-          <TimePicker
-            format="HH:mm:ss"
-            style={{ width: '100%' }}
-          />
+          <TimePicker format="HH:mm:ss" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
@@ -86,10 +80,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
           label="结束时间"
           rules={[{ required: true, message: '请选择结束时间' }]}
         >
-          <TimePicker
-            format="HH:mm:ss"
-            style={{ width: '100%' }}
-          />
+          <TimePicker format="HH:mm:ss" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
@@ -108,7 +99,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit }
           <Input />
         </Form.Item>
 
-        {/** 如果需要让用户手动选择状态，可以启用此项 */}
+        {/** 如果需要让用户手动选择状态，可以取消下面代码的注释 */}
         <Form.Item
           name="status"
           label="预订状态"

@@ -9,20 +9,26 @@ import { Venue } from '../../types/venue';
 
 const VenueList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { venues, status } = useAppSelector((state) => state.venues);
+  const { venues, status, error } = useAppSelector((state) => state.venues);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingVenue, setEditingVenue] = useState<Venue | null>(null);
   const [viewingVenue, setViewingVenue] = useState<Venue | null>(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
   useEffect(() => {
-    console.log("🚀 正在请求 API...");
-    dispatch(fetchVenues());  // ✅ 直接使用 Redux 的异步 action
+    // 发起API请求获取场地数据
+    dispatch(fetchVenues())
+      .unwrap()
+      .then(() => {
+        if (status === 'failed' && error) {
+          message.error(`加载场地数据失败: ${error}`);
+        }
+      })
+      .catch((err) => {
+        message.error(`加载场地数据失败: ${err instanceof Error ? err.message : '未知错误'}`);
+      });
   }, [dispatch]);
   
-  console.log("🎯 Redux Store venues:", venues);
-  
-
   const handleDelete = async (id: string) => {
     try {
       await dispatch(deleteVenue(id)).unwrap();

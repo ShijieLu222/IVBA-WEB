@@ -55,13 +55,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit, 
       onSubmit(bookingData);
       form.resetFields();
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error('Form validation failed:', error);
     }
   };
 
   return (
     <Modal
-      title={initialValues ? "编辑预订" : "添加预订"}
+      title={initialValues ? "Edit Booking" : "Add Booking"}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -74,70 +74,70 @@ const BookingForm: React.FC<BookingFormProps> = ({ visible, onCancel, onSubmit, 
       >
         <Form.Item
           name="venue_id"
-          label="场地ID"
-          rules={[{ required: true, message: '请输入场地ID' }]}
+          label="Venue ID"
+          rules={[{ required: true, message: 'Please enter venue ID' }]}
         >
           <Input type="number" />
         </Form.Item>
 
         <Form.Item
           name="booking_date"
-          label="预订日期"
-          rules={[{ required: true, message: '请选择预订日期' }]}
+          label="Booking Date"
+          rules={[{ required: true, message: 'Please select booking date' }]}
         >
           <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
           name="start_time"
-          label="开始时间"
-          rules={[{ required: true, message: '请选择开始时间' }]}
+          label="Start Time"
+          rules={[{ required: true, message: 'Please select start time' }]}
         >
           <TimePicker format="HH:mm:ss" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
           name="end_time"
-          label="结束时间"
-          rules={[{ required: true, message: '请选择结束时间' }]}
+          label="End Time"
+          rules={[{ required: true, message: 'Please select end time' }]}
         >
           <TimePicker format="HH:mm:ss" style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item
           name="user_name"
-          label="预订人姓名"
-          rules={[{ required: true, message: '请输入预订人姓名' }]}
+          label="Booker Name"
+          rules={[{ required: true, message: 'Please enter booker name' }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="contact_info"
-          label="联系方式"
-          rules={[{ required: true, message: '请输入联系方式' }]}
+          label="Contact Info"
+          rules={[{ required: true, message: 'Please enter contact info' }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="status"
-          label="预订状态"
-          rules={[{ required: true, message: '请选择预订状态' }]}
+          label="Booking Status"
+          rules={[{ required: true, message: 'Please select booking status' }]}
           initialValue="pending"
         >
           <Select>
-            <Select.Option value="pending">待确认</Select.Option>
-            <Select.Option value="confirmed">已确认</Select.Option>
-            <Select.Option value="cancelled">已取消</Select.Option>
+            <Select.Option value="pending">Pending</Select.Option>
+            <Select.Option value="confirmed">Confirmed</Select.Option>
+            <Select.Option value="cancelled">Cancelled</Select.Option>
           </Select>
         </Form.Item>
 
         <Form.Item>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button onClick={onCancel}>取消</Button>
+            <Button onClick={onCancel}>Cancel</Button>
             <Button type="primary" htmlType="submit" style={{ backgroundColor: '#000000' }}>
-              提交
+              Submit
             </Button>
           </Space>
         </Form.Item>

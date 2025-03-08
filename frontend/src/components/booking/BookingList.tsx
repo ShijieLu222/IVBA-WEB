@@ -115,7 +115,7 @@ const BookingList: React.FC = () => {
             style={{ color: '#1890ff' }}
             onClick={() => handleView(record)}
           >
-            查看
+            View
           </Button>
           <Button
             type="text"

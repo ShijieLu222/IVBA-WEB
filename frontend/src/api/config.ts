@@ -4,7 +4,7 @@ import axios from 'axios';
 export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://ivba-web-production.up.railway.app";
 
 const api = axios.create({
-  baseURL: API_BASE_URL, // ✅ 这里不再用 `/api`，而是完整 API 地址
+  baseURL: `${API_BASE_URL}/api`, // 添加 /api 前缀以匹配后端路由
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

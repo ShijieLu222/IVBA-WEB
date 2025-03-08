@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { API_BASE_URL } from './config';
 
 // 定义登录参数接口
 interface LoginParams {
@@ -27,7 +26,7 @@ export const login = async (params: LoginParams): Promise<LoginResponse> => {
   formData.append('password', params.password);
   
   const response = await axios.post<LoginResponse>(
-    `${API_BASE_URL}/auth/token`,
+    `/api/auth/token`,
     formData,
     {
       headers: {
@@ -46,7 +45,7 @@ export const getCurrentUser = async (): Promise<UserInfo> => {
   }
   
   const response = await axios.get<UserInfo>(
-    `${API_BASE_URL}/auth/me`,
+    `/api/auth/me`,
     {
       headers: {
         Authorization: `Bearer ${token}`

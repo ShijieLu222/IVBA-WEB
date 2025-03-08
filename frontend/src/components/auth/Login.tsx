@@ -19,16 +19,16 @@ const Login: React.FC = () => {
       setLoading(true);
       const response = await login(values);
       
-      // 保存token到本地存储
+      // Save token to local storage
       localStorage.setItem('token', response.access_token);
       
-      message.success('登录成功');
+      message.success('Login successful');
       
-      // 登录成功后跳转到首页
+      // Redirect to home page after successful login
       navigate('/');
     } catch (error: any) {
-      console.error('登录失败:', error);
-      message.error(error.response?.data?.detail || '登录失败，请检查用户名和密码');
+      console.error('Login failed:', error);
+      message.error(error.response?.data?.detail || 'Login failed, please check your username and password');
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="login-container">
-      <Card title="场地预订系统" className="login-card">
+      <Card title="Independent Venue Booking" className="login-card">
         <Form
           name="login"
           initialValues={{ remember: true }}
@@ -45,27 +45,27 @@ const Login: React.FC = () => {
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: '请输入用户名!' }]}
+            rules={[{ required: true, message: 'Please enter your username!' }]}
           >
             <Input 
               prefix={<UserOutlined />} 
-              placeholder="用户名" 
+              placeholder="Username" 
             />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: '请输入密码!' }]}
+            rules={[{ required: true, message: 'Please enter your password!' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="密码"
+              placeholder="Password"
             />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading} block>
-              登录
+              Login
             </Button>
           </Form.Item>
         </Form>

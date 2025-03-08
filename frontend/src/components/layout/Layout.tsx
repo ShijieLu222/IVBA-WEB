@@ -11,7 +11,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 自定义主题配置
+
   const { token } = theme.useToken();
   const customToken = {
     ...token,
@@ -92,7 +92,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               }}
             />
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
-              Venue Booking Management System
+              Sparks
             </span>
           </div>
           <div style={{ marginRight: '24px' }}>

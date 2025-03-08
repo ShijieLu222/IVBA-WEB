@@ -48,9 +48,9 @@ const VenueView: React.FC<VenueViewProps> = ({ visible, venue, onClose }) => {
         <Descriptions.Item label="Created At">{venue.created_at}</Descriptions.Item>
         <Descriptions.Item label="Updated At">{venue.updated_at}</Descriptions.Item>
         <Descriptions.Item label="Facilities" span={2}>
-          {venue.facilities.map((facility, index) => (
+          {venue.facilities && venue.facilities.map((facility, index) => (
             <div key={index}>
-              <strong>{facility.display_name}</strong>: {facility.facility_information.join(', ')}
+              <strong>{facility.display_name}</strong>: {facility.facility_information && Array.isArray(facility.facility_information) ? facility.facility_information.join(', ') : ''}
             </div>
           ))}
         </Descriptions.Item>

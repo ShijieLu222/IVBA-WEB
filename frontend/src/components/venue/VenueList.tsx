@@ -16,8 +16,12 @@ const VenueList: React.FC = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchVenues());
+    console.log("🚀 正在请求 API...");
+    dispatch(fetchVenues());  // ✅ 直接使用 Redux 的异步 action
   }, [dispatch]);
+  
+  console.log("🎯 Redux Store venues:", venues);
+  
 
   const handleDelete = async (id: string) => {
     try {

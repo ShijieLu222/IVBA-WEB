@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 使用环境变量确定 API 地址
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://ivba-web-production.up.railway.app";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ivba-web-production.up.railway.app';
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`, // 添加 /api 前缀以匹配后端路由

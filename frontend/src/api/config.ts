@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-// API基础URL
-export const API_BASE_URL = '/api';
+// 使用环境变量确定 API 地址
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "https://ivba-web-production.up.railway.app";
 
-// 创建axios实例
 const api = axios.create({
-  baseURL: API_BASE_URL, // 使用相对路径，通过Vite代理转发到后端
+  baseURL: API_BASE_URL, // ✅ 这里不再用 `/api`，而是完整 API 地址
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -15,7 +14,6 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   config => {
-    // 这里可以添加认证信息等
     return config;
   },
   error => {
@@ -29,13 +27,10 @@ api.interceptors.response.use(
     return response;
   },
   error => {
-    // 处理错误响应
     const { response } = error;
     if (response) {
-      // 服务器返回了错误信息
       console.error('API错误:', response.data);
     } else {
-      // 网络错误或请求被取消
       console.error('网络错误或请求被取消');
     }
     return Promise.reject(error);

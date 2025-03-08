@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { JSX, useEffect, useState } from 'react';
+import { JSX } from 'react';
 import Layout from './components/layout/Layout';
 import VenueList from './components/venue/VenueList';
 import BookingList from './components/booking/BookingList';

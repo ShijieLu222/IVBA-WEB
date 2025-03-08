@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Descriptions, Tag } from 'antd';
-import { Venue, VenueStatus } from '../../types/venue';
+import { Venue, } from '../../types/venue';
 
 interface VenueViewProps {
   visible: boolean;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout as AntLayout, Menu, Button, theme, Dropdown, Space } from 'antd';
+import { Layout as AntLayout, Menu, Button, theme, Dropdown } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/logo.svg';

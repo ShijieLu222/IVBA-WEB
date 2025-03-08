@@ -17,4 +17,4 @@ if __name__ == "__main__":
         reload=True  # 开发环境中启用热重载
     )
     
-    print(f"服务器运行在 http://{host}:{port}")
+    print(f"服务器运行在 https://{host}:{port}")

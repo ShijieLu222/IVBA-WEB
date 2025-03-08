@@ -1,4 +1,5 @@
 import axios from 'axios';
+import api from './config';
 
 // 定义登录参数接口
 interface LoginParams {
@@ -21,13 +22,13 @@ interface UserInfo {
 
 // 登录函数
 export const login = async (params: LoginParams): Promise<LoginResponse> => {
-  const formData = new FormData();
-  formData.append('username', params.username);
-  formData.append('password', params.password);
+  const urlParams = new URLSearchParams();
+  urlParams.append('username', params.username);
+  urlParams.append('password', params.password);
   
-  const response = await axios.post<LoginResponse>(
-    `/api/auth/token`,
-    formData,
+  const response = await api.post<LoginResponse>(
+    '/auth/token',
+    urlParams,
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -44,20 +45,15 @@ export const getCurrentUser = async (): Promise<UserInfo> => {
     throw new Error('未登录');
   }
   
-  const response = await axios.get<UserInfo>(
-    `/api/auth/me`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+  const response = await api.get<UserInfo>(
+    '/auth/me'
   );
   return response.data;
 };
 
 // 设置全局请求拦截器，自动添加认证头
 export const setupAuthInterceptor = () => {
-  axios.interceptors.request.use(
+  api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('token');
       if (token && config.headers) {
@@ -68,3 +64,13 @@ export const setupAuthInterceptor = () => {
     (error) => Promise.reject(error)
   );
 };
+axios.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem('token');
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );

@@ -9,7 +9,7 @@ export const API_BASE_URL = (() => {
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api`, // 添加 /api 前缀以匹配后端路由
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   }
@@ -51,7 +51,7 @@ api.interceptors.response.use(
       });
       // 如果是混合内容错误，提供更具体的错误信息
       if (response.status === 0 && error.message?.includes('Mixed Content')) {
-        console.error('检测到混合内容错误：请确保所有资源都使用HTTPS');
+        console.error('检测到混合内容错误:请确保所有资源都使用HTTPS');
       }
     } else {
       console.error('网络错误或请求被取消:', error.message);

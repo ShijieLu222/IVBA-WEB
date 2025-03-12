@@ -42,7 +42,7 @@ export const login = async (params: LoginParams): Promise<LoginResponse> => {
 export const getCurrentUser = async (): Promise<UserInfo> => {
   const token = localStorage.getItem('token');
   if (!token) {
-    throw new Error('未登录');
+    throw new Error('not login');
   }
   
   const response = await api.get<UserInfo>(
